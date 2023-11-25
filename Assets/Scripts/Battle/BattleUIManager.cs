@@ -5,6 +5,8 @@ using UnityEngine.Accessibility;
 
 public class BattleUIManager : MonoBehaviour
 {
+    private GameObject attacker;
+
     public void OnAttack1()
     {
         Debug.Log("Attack1");

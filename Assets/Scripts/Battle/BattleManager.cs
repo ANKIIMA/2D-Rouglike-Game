@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,12 +11,8 @@ public class BattleManager : MonoBehaviour
     public static BattleManager instance;
 
     //Reference to the enemies and hero scripts in the battle.
-    private List<BattleEnemy> enemyScriptList;
-    private List<BattleHero> heroScriptList;
-
-    //Boolean check if the game is waiting for player or the enemy is acting.
-    private bool waitPlayer;
-    private bool enemyActing;
+    private Queue<BattleEnemy> enemyScriptQueue;
+    private Queue<BattleHero> heroScriptQueue;
 
     //Reference to the Camera.
     private Camera mainCamera;
@@ -25,9 +22,6 @@ public class BattleManager : MonoBehaviour
     private float rightPoint;
     private float topPoint;
     private float bottomPoint;
-
-    //Current index of the acting unit.
-    private int currentIndex;
 
 
     //Hero types.
@@ -81,10 +75,10 @@ public class BattleManager : MonoBehaviour
             Destroy(this);
         }
 
-        enemyScriptList = new List<BattleEnemy>();
-        heroScriptList = new List<BattleHero>();
-        enemyScriptList.Clear();
-        heroScriptList.Clear();
+        enemyScriptQueue = new Queue<BattleEnemy>();
+        heroScriptQueue = new Queue<BattleHero>();
+        enemyScriptQueue.Clear();
+        heroScriptQueue.Clear();
 
         heros = new Dictionary<heroTypes, GameObject>();
         heros.Clear();
@@ -96,9 +90,6 @@ public class BattleManager : MonoBehaviour
 
         DungenHandler = GameObject.Find("Dungen");
         BattleHandlerTrans = GameObject.Find("Battle").transform;
-
-        waitPlayer = false;
-        enemyActing = false;
 
         mainCamera = Camera.main;
         instance.SetPoints();
@@ -120,8 +111,12 @@ public class BattleManager : MonoBehaviour
         //Instantiate units.
         instance.GenerateUnits();
 
-        currentIndex = 0;
+        Debug.Log(BattleStateManager.instance.GetCurrentState().ToString());
+    }
 
+    private void Update()
+    {
+        
     }
 
     private void OnDisable()
@@ -130,6 +125,8 @@ public class BattleManager : MonoBehaviour
 
         BattleHandlerTrans.gameObject.SetActive(false);
     }
+
+
 
     /// <summary>
     /// Set the left, right, top, bottom point of the screen.
@@ -213,13 +210,13 @@ public class BattleManager : MonoBehaviour
     public void AddTeamMembers(BattleHero member)
     {
         //There are up to 3 members in the team.
-        if(heroScriptList.Count > 3) 
+        if(heroScriptQueue.Count > 3) 
         {
             Debug.Log("Reach the max team members.");
             return; 
         }
         else 
-            heroScriptList.Add(member);
+            heroScriptQueue.Enqueue(member);
     }
 
     /// <summary>
@@ -229,12 +226,12 @@ public class BattleManager : MonoBehaviour
     public void AddEnemy(BattleEnemy enemy)
     {
         //There are up to 4 members in the enemy list.
-        if(enemyScriptList.Count > 4)
+        if(enemyScriptQueue.Count > 4)
         {
             Debug.Log("Reach the max enemy number.");
         }
         else
-            enemyScriptList.Add(enemy);
+            enemyScriptQueue.Enqueue(enemy);
     }
 
     /// <summary>
