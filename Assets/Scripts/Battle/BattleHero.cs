@@ -76,17 +76,27 @@ public class BattleHero : MonoBehaviour
     protected virtual bool Attack1()
     {
 
-        //Test
-        StartCoroutine(Test());
+
+        //已经移动到敌人了
+        //m_Animator.CrossFade("Attack1", 0.1f);
+
+        //2s后返回true.
 
         return m_actionDone;
     }
 
-    IEnumerator Test()
+    private IEnumerator Timer()
     {
         yield return new WaitForSeconds(2);
 
         m_actionDone = true;
+
+        yield break;
+    }
+
+    public void StartTimer()
+    {
+        StartCoroutine(Timer());
     }
 
     protected virtual bool Attack2()
@@ -94,12 +104,12 @@ public class BattleHero : MonoBehaviour
         return false;
     }
 
-    protected virtual bool Pass()
+    protected virtual bool Skill1()
     {
         return false;
     }
 
-    protected virtual bool Skill()
+    protected virtual bool Skill2()
     {
         return false;
     }
@@ -112,13 +122,12 @@ public class BattleHero : MonoBehaviour
     /// <returns></returns>
     public virtual bool Action(int index, BattleEnemy target)
     {
-        Debug.Log("current hero action done: " + m_actionDone);
         switch (index)
         {
             case 0: return Attack1();
             case 1: return Attack2();
-            case 2: return Pass();
-            case 3: return Skill();
+            case 2: return Skill1();
+            case 3: return Skill2();
             default: return false;
         }
     }
@@ -127,6 +136,6 @@ public class BattleHero : MonoBehaviour
     {
         Debug.Log("Now reset");
         m_actionDone = false;
-        Debug.Log("value of done: " + m_actionDone);
+
     }
 }

@@ -35,6 +35,8 @@ public class EnemyAttackState : BattleState
 
         //clear the unitIndex for hero
         BattleManager.instance.ClearUnitIndex();
+
+        currentUnit.StartTimer();
     }
 
     public void OnStateLeave()
@@ -65,6 +67,7 @@ public class EnemyAttackState : BattleState
                 currentUnit = BattleManager.instance.GetActionEnemy();
                 actionCount++;
                 
+                currentUnit.StartTimer();
             }
         }
     }

@@ -69,17 +69,22 @@ public class BattleEnemy : MonoBehaviour
     {
         //移动，攻击，返回移动
 
-        StartCoroutine(Test());
-
         return m_actionDone;
     }
 
     //wait for 2s and return true;
-    IEnumerator Test()
+    private IEnumerator Timer()
     {
         yield return new WaitForSeconds(2);
 
         m_actionDone = true;
+
+        yield break;
+    }
+
+    public void StartTimer()
+    {
+        StartCoroutine (Timer());
     }
 
     public virtual void ResetActionDone()
