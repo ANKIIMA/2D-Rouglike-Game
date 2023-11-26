@@ -14,6 +14,9 @@ public class BattleManager : MonoBehaviour
     private Queue<BattleEnemy> enemyScriptQueue;
     private Queue<BattleHero> heroScriptQueue;
 
+    //Index of the current unit
+    public int unitIndex = 0;
+
     //Reference to the Camera.
     private Camera mainCamera;
 
@@ -60,9 +63,9 @@ public class BattleManager : MonoBehaviour
 
     #endregion
     //Prefab of heros
-    private Dictionary<heroTypes, GameObject> heros;
+    private Dictionary<heroTypes, GameObject> herosConfig;
     //Prefab of enemies
-    private Dictionary<enemyTypes, GameObject> enemies;
+    private Dictionary<enemyTypes, GameObject> enemiesConfig;
 
     private void Awake()
     {
@@ -80,10 +83,10 @@ public class BattleManager : MonoBehaviour
         enemyScriptQueue.Clear();
         heroScriptQueue.Clear();
 
-        heros = new Dictionary<heroTypes, GameObject>();
-        heros.Clear();
-        enemies = new Dictionary<enemyTypes, GameObject>();
-        enemies.Clear();
+        herosConfig = new Dictionary<heroTypes, GameObject>();
+        herosConfig.Clear();
+        enemiesConfig = new Dictionary<enemyTypes, GameObject>();
+        enemiesConfig.Clear();
 
         //Dont destroy when change scenes.
         DontDestroyOnLoad(gameObject);
@@ -99,7 +102,13 @@ public class BattleManager : MonoBehaviour
         //set false and wait to be enable.
         BattleHandlerTrans.gameObject.SetActive(false);
 
+        unitIndex = 0;
+
         SceneManager.sceneLoaded += OnSceneWasLoaded;
+
+        //Instantiate units.
+        instance.GenerateUnits();
+
     }
 
     private void OnEnable()
@@ -108,10 +117,9 @@ public class BattleManager : MonoBehaviour
 
         DungenHandler.SetActive(false);
 
-        //Instantiate units.
-        instance.GenerateUnits();
+        unitIndex = 0;
 
-        Debug.Log(BattleStateManager.instance.GetCurrentState().ToString());
+        
     }
 
     private void Update()
@@ -153,12 +161,12 @@ public class BattleManager : MonoBehaviour
     {
         foreach (var config in enemyConfigs)
         {
-            enemies.Add(config.type, config.prefab);
+            enemiesConfig.Add(config.type, config.prefab);
         }
 
         foreach (var config in heroConfigs)
         {
-            heros.Add(config.type, config.prefab);
+            herosConfig.Add(config.type, config.prefab);
         }
     }
 
@@ -181,21 +189,21 @@ public class BattleManager : MonoBehaviour
 
         //Enemy will be placed from back to front.
         //Generate enemies
-        Debug.Log(GameManager.instance.enemyList.Count);
+        //Debug.Log(GameManager.instance.enemyList.Count);
         foreach (var Type in GameManager.instance.enemyList)
         {
 
-            Instantiate(enemies[Type], enemyPos, Quaternion.identity, enemyHandler.transform);
+            Instantiate(enemiesConfig[Type], enemyPos, Quaternion.identity, enemyHandler.transform);
             enemyPos.x -= unitLength;
 
         }
         enemyHandler.transform.SetParent(BattleHandlerTrans);
 
-        Debug.Log(GameManager.instance.heroList.Count);
+        //Debug.Log(GameManager.instance.heroList.Count);
         //Hero team will be placed from front to back. 
         foreach(var Type in GameManager.instance.heroList)
         {
-            Instantiate(heros[Type], heroPos, Quaternion.identity, heroHandler.transform);  
+            Instantiate(herosConfig[Type], heroPos, Quaternion.identity, heroHandler.transform);  
             heroPos.x += unitLength;
             
         }
@@ -247,5 +255,59 @@ public class BattleManager : MonoBehaviour
 
         BattleHandlerTrans.gameObject.SetActive(false);
         instance.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// return the hero who should be acting from the queue.
+    /// </summary>
+    /// <returns></returns>
+    public BattleHero GetActionHero()
+    {
+        BattleHero currentHero = heroScriptQueue.Dequeue();
+        heroScriptQueue.Enqueue(currentHero);
+
+        return currentHero;
+    }
+
+    /// <summary>
+    /// return the enemy who should be acting from the queue.
+    /// </summary>
+    /// <returns></returns>
+    public BattleEnemy GetActionEnemy()
+    {
+
+        BattleEnemy currentEnemy = enemyScriptQueue.Dequeue();
+        Debug.Log("current enemy: " +  currentEnemy.gameObject.name);
+        enemyScriptQueue.Enqueue(currentEnemy);
+
+        return currentEnemy;
+    }
+
+    /// <summary>
+    /// return the number of heros.
+    /// </summary>
+    /// <returns></returns>
+    public int GetHeroCount()
+    {
+        return heroScriptQueue.Count;
+    }
+
+    /// <summary>
+    /// return the number of enemies.
+    /// </summary>
+    /// <returns></returns>
+    public int GetEnemyCount()
+    {
+        return enemyScriptQueue.Count;
+    }
+
+    public void AddUnitIndex()
+    {
+        unitIndex++;
+    }
+
+    public void ClearUnitIndex()
+    {
+        unitIndex = 0;
     }
 }

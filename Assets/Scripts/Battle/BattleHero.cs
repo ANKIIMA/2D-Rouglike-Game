@@ -12,7 +12,7 @@ public class BattleHero : MonoBehaviour
     private float m_hp;
     private float m_maxhp;
 
-    
+    private bool m_actionDone = false;
 
     protected virtual void Awake()
     {
@@ -21,6 +21,7 @@ public class BattleHero : MonoBehaviour
         m_Animator = GetComponent<Animator>();
         m_maxhp = 100f;
         m_hp = m_maxhp;
+        m_actionDone = false;
     }
 
     /// <summary>
@@ -70,5 +71,54 @@ public class BattleHero : MonoBehaviour
         //向右移动的距离
         transform.Translate(new Vector3(destination * Time.deltaTime, 0, 0));
         return false;
+    }
+
+    protected virtual bool Attack1()
+    {
+
+        //Test
+        StartCoroutine(Test());
+
+        return m_actionDone;
+    }
+
+    IEnumerator Test()
+    {
+        yield return new WaitForSeconds(2);
+
+        m_actionDone = true;
+    }
+
+    protected virtual bool Attack2()
+    {
+        return false;
+    }
+
+    protected virtual bool Pass()
+    {
+        return false;
+    }
+
+    protected virtual bool Skill()
+    {
+        return false;
+    }
+
+    /// <summary>
+    /// act according the index and target.
+    /// </summary>
+    /// <param name="index">action index</param>
+    /// <param name="target">target enemy</param>
+    /// <returns></returns>
+    public virtual bool Action(int index, BattleEnemy target)
+    {
+        switch (index)
+        {
+            case 0: return Attack1();
+            case 1: return Attack2();
+            case 2: return Pass();
+            case 3: return Skill();
+            default: return false;
+        }
     }
 }

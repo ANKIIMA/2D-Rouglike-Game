@@ -6,10 +6,14 @@ using UnityEngine;
 public class BattleEnemy : MonoBehaviour
 {
     private Animator m_Animator;
+    //bool check if unit action is over.
+    private bool m_actionDone = false;
     protected virtual void Awake()
     {
         //Register to the battle manager.
         BattleManager.instance.AddEnemy(this);
+
+        m_actionDone = false;
     }
 
     /// <summary>
@@ -59,5 +63,22 @@ public class BattleEnemy : MonoBehaviour
         //向左移动的距离
         transform.Translate(new Vector3(-destination * Time.deltaTime, 0, 0));
         return false;
+    }
+
+    public virtual bool Attack()
+    {
+        //移动，攻击，返回移动
+
+        StartCoroutine(Test());
+
+        return m_actionDone;
+    }
+
+    //wait for 2s and return true;
+    IEnumerator Test()
+    {
+        yield return new WaitForSeconds(2);
+
+        m_actionDone = true;
     }
 }

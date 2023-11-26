@@ -8,6 +8,13 @@ public class BattleStateManager : MonoBehaviour
     public static BattleStateManager instance;
     private BattleState currentState;
 
+    [NonSerialized]
+    public HeroAttackState heroAttackState;
+    [NonSerialized]
+    public EnemyAttackState enemyAttackState;
+    [NonSerialized]
+    public WaitForInputState waitForInputState;
+
     //Singleton
     private void Awake()
     {
@@ -17,6 +24,13 @@ public class BattleStateManager : MonoBehaviour
         {
             Destroy(instance);
         }
+
+        //Create states to avoid another new
+        heroAttackState = new HeroAttackState();
+        
+        enemyAttackState = new EnemyAttackState();
+        waitForInputState = new WaitForInputState();
+
     }
 
     /// <summary>
@@ -24,7 +38,7 @@ public class BattleStateManager : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
-        currentState = new WaitForInputState();
+        currentState = waitForInputState;
         currentState.OnStateEnter();
     }
 
@@ -46,10 +60,5 @@ public class BattleStateManager : MonoBehaviour
         currentState = newState;
         currentState.OnStateEnter();
 
-    }
-
-    public Type GetCurrentState()
-    {
-        return currentState.GetType();
     }
 }

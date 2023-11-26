@@ -7,16 +7,21 @@ public class WaitForInputState : BattleState
 {
     public void OnStateAction()
     {
-        //Debug.Log("Wait For Input.");
+        
     }
 
     public void OnStateEnter()
     {
-        Debug.Log("Start to Wait For Input.");
+        Debug.LogError("Start to Wait For Input.");
+        //activate the button
+        BattleUIManager.instance.ActivateActionPanel();
     }
 
     public void OnStateLeave()
     {
-        Debug.Log("Input Done.");
+        
+        //deactivate the button
+        BattleUIManager.instance.DeactivateActionPanel();
+
     }
 }
