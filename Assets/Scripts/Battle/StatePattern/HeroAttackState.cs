@@ -16,6 +16,7 @@ public class HeroAttackState : BattleState
         //if action is over.
         if (currentUnit.Action(actionCode, targetEnemy) == true)
         {
+            currentUnit.ResetActionDone();
             //index ++ for the next hero.
             BattleManager.instance.AddUnitIndex();
             //there is more heros who did not act.  

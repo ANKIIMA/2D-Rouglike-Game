@@ -81,4 +81,9 @@ public class BattleEnemy : MonoBehaviour
 
         m_actionDone = true;
     }
+
+    public virtual void ResetActionDone()
+    {
+        m_actionDone = false;
+    }
 }

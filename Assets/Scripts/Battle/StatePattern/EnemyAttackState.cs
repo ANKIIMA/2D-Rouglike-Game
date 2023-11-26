@@ -53,6 +53,7 @@ public class EnemyAttackState : BattleState
         //action is over
         else
         {
+            currentUnit.ResetActionDone();
             //all unit have attacked
             if(actionCount == BattleManager.instance.GetEnemyCount())
             {

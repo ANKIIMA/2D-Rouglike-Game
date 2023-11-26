@@ -112,6 +112,7 @@ public class BattleHero : MonoBehaviour
     /// <returns></returns>
     public virtual bool Action(int index, BattleEnemy target)
     {
+        Debug.Log("current hero action done: " + m_actionDone);
         switch (index)
         {
             case 0: return Attack1();
@@ -120,5 +121,12 @@ public class BattleHero : MonoBehaviour
             case 3: return Skill();
             default: return false;
         }
+    }
+
+    public virtual void ResetActionDone()
+    {
+        Debug.Log("Now reset");
+        m_actionDone = false;
+        Debug.Log("value of done: " + m_actionDone);
     }
 }
