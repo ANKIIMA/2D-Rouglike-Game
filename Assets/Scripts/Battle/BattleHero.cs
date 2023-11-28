@@ -12,6 +12,9 @@ public class BattleHero : MonoBehaviour
     private float m_hp;
     private float m_maxhp;
 
+    private float m_sp;
+    private float m_maxsp;
+
     private bool m_actionDone = false;
 
     protected virtual void Awake()
@@ -19,8 +22,12 @@ public class BattleHero : MonoBehaviour
         //Register to the battle manager
         BattleManager.instance.AddTeamMembers(this);
         m_Animator = GetComponent<Animator>();
+        //initiate hp and sp
         m_maxhp = 100f;
         m_hp = m_maxhp;
+        m_maxsp = 100f;
+        m_sp = m_maxsp;
+        //reset actionDone
         m_actionDone = false;
     }
 
@@ -134,8 +141,17 @@ public class BattleHero : MonoBehaviour
 
     public virtual void ResetActionDone()
     {
-        Debug.Log("Now reset");
         m_actionDone = false;
 
+    }
+
+    public float GetHealthValue()
+    {
+        return m_hp / m_maxhp;
+    }
+
+    public float GetSkillValue()
+    {
+        return m_sp / m_maxsp;
     }
 }

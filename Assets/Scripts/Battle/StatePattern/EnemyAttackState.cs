@@ -31,7 +31,7 @@ public class EnemyAttackState : BattleState
         actionCount++;
 
         //deactivate the ActionPanel
-        BattleUIManager.instance.DeactivateActionPanel();
+        BattleUIManager.instance.DeactivatePlayerActionPanel();
 
         //clear the unitIndex for hero
         BattleManager.instance.ClearUnitIndex();
@@ -42,7 +42,7 @@ public class EnemyAttackState : BattleState
     public void OnStateLeave()
     {
         //activate the actionPanel
-        BattleUIManager.instance.ActivateActionPanel();
+        BattleUIManager.instance.ActivatePlayerActionPanel();
     }
 
     private void unitAction()

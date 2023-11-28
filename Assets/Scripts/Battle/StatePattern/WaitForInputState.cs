@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class WaitForInputState : BattleState
 {
+    BattleHero currentUnit;
     public void OnStateAction()
     {
         
@@ -14,14 +15,23 @@ public class WaitForInputState : BattleState
     {
         Debug.LogError("Start to Wait For Input.");
         //activate the button
-        BattleUIManager.instance.ActivateActionPanel();
+        BattleUIManager.instance.ActivatePlayerActionPanel();
+
+        currentUnit = BattleManager.instance.GetActionHero();
+        //change the avatar position to the unit.   
+        BattleUIManager.instance.UpdateHeroInfo(currentUnit.GetPosition(), currentUnit);
     }
 
     public void OnStateLeave()
     {
         
         //deactivate the button
-        BattleUIManager.instance.DeactivateActionPanel();
+        BattleUIManager.instance.DeactivatePlayerActionPanel();
 
+    }
+
+    public BattleHero GetCurrentUnit()
+    {
+        return currentUnit;
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Accessibility;
+using UnityEngine.UI;
 
 public class BattleUIManager : MonoBehaviour
 {
@@ -83,13 +84,65 @@ public class BattleUIManager : MonoBehaviour
         }
     }
 
-    public void DeactivateActionPanel()
+    public void DeactivatePlayerActionPanel()
     {
-        actionPanel.gameObject.SetActive(false);
+        actionPanel.transform.Find("playerInputInfo").gameObject.SetActive(false);
     }
 
-    public void ActivateActionPanel()
+    public void ActivatePlayerActionPanel()
     {
-        actionPanel.gameObject.SetActive(true);
+        actionPanel.transform.Find("playerInputInfo").gameObject.SetActive(true);
+    }
+
+    public void ActivateEnemyInfo()
+    {
+        actionPanel.transform.Find("EnemyInfo").gameObject.SetActive(true);
+    }
+
+    public void DeactivateEnemyInfo()
+    {
+        actionPanel.transform.Find("EnemyInfo").gameObject.SetActive(false);
+    }
+
+
+    /// <summary>
+    /// update the ui info of hero
+    /// </summary>
+    /// <param name="x">position of hero</param>
+    /// <param name="unit">script of hero</param>
+    public void UpdateHeroInfo(float x, BattleHero unit)
+    {
+        //camera and avatar
+        Transform avatarCamera = GameObject.Find("HeroCamera").transform;
+        avatarCamera.position = new Vector3(x + 0.24f, avatarCamera.position.y, avatarCamera.position.z);
+        avatarCamera.SetParent(unit.transform);
+
+        //health bar and skill bar
+        Slider healthBar = GameObject.Find("HealthBar").GetComponent<Slider>();
+        Slider skillBar = GameObject.Find("SkillBar").GetComponent<Slider>();
+        if (healthBar != null)
+        {
+            healthBar.value = unit.GetHealthValue();
+            healthBar.interactable = false;
+        }
+        if(skillBar != null)
+        {
+            skillBar.value = unit.GetSkillValue();
+            skillBar.interactable = false;
+        }
+
+        //name
+        Text heroName = GameObject.Find("UnitName").GetComponent<Text>();
+        if(heroName != null)
+        {
+            heroName.text = unit.name;
+        }
+
+        //Skill Button name
+    }
+
+    public void UpdateEnemyInfo()
+    {
+
     }
 }

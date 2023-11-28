@@ -37,15 +37,17 @@ public class HeroAttackState : BattleState
     public void OnStateEnter()
     {
         Debug.LogError("Enter Hero Attack.");
-        currentUnit = BattleManager.instance.GetActionHero();
-        BattleUIManager.instance.DeactivateActionPanel();
+        //get current unit.
+        currentUnit = BattleStateManager.instance.waitForInputState.GetCurrentUnit();
+        BattleUIManager.instance.DeactivatePlayerActionPanel();
         //start the timer to stimulate.
         currentUnit.StartTimer();
+
     }
 
     public void OnStateLeave()
     {
-        BattleUIManager.instance.ActivateActionPanel();
+        BattleUIManager.instance.ActivatePlayerActionPanel();
     }
 
     /// <summary>
