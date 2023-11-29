@@ -9,11 +9,11 @@ public class BattleHero : MonoBehaviour
 {
     private Animator m_Animator;
 
-    private float m_hp;
-    private float m_maxhp;
+    private int m_hp;
+    private int m_maxhp;
 
-    private float m_sp;
-    private float m_maxsp;
+    private int m_sp;
+    private int m_maxsp;
 
     private bool m_actionDone = false;
 
@@ -23,9 +23,9 @@ public class BattleHero : MonoBehaviour
         BattleManager.instance.AddTeamMembers(this);
         m_Animator = GetComponent<Animator>();
         //initiate hp and sp
-        m_maxhp = 100f;
+        m_maxhp = 100;
         m_hp = m_maxhp;
-        m_maxsp = 100f;
+        m_maxsp = 100;
         m_sp = m_maxsp;
         //reset actionDone
         m_actionDone = false;
@@ -147,11 +147,11 @@ public class BattleHero : MonoBehaviour
 
     public float GetHealthValue()
     {
-        return m_hp / m_maxhp;
+        return (float)m_hp / m_maxhp;
     }
 
     public float GetSkillValue()
     {
-        return m_sp / m_maxsp;
+        return (float)m_sp / m_maxsp;
     }
 }

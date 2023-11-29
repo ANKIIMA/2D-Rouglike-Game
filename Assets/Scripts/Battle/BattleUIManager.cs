@@ -1,8 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Accessibility;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Slider = UnityEngine.UI.Slider;
+
+
 
 public class BattleUIManager : MonoBehaviour
 {
@@ -17,7 +22,7 @@ public class BattleUIManager : MonoBehaviour
 
     private void Awake()
     {
-
+        //singleton
         if(instance == null)
         {
             instance = this;
@@ -26,14 +31,47 @@ public class BattleUIManager : MonoBehaviour
         {
             Destroy(instance);
         }
+        //ui enable
         actionPanel = GameObject.Find("ActionPanel").transform;
-
+        //action index initiate
         actionIndex = -1;
+        //enemy info initiate
+        enemyTarget = null;
+        DeactivateEnemyInfo();
+
     }
 
     private void OnEnable()
     {
         actionIndex = -1;
+    }
+
+    private void Update()
+    {
+        Mouse mouse = Mouse.current;
+        if( mouse == null )
+        {
+            return;
+        }
+        else if(mouse.leftButton.isPressed)
+        {
+            //ScreenPoint
+            var onScreenPosition = mouse.position.ReadValue();
+            //Ray(from camera to point in world space, vertical in 2D)
+            var ray = Camera.main.ScreenPointToRay(onScreenPosition);
+            //ray cast
+            var hit = Physics2D.Raycast(new Vector2(ray.origin.x, ray.origin.y), Vector2.zero, Mathf.Infinity);
+
+            if(hit.collider != null )
+            {
+                //set target
+                enemyTarget = hit.collider.GetComponent<BattleEnemy>();
+                //ui update
+                ActivateEnemyInfo();
+                UpdateEnemyInfo(enemyTarget);
+            }
+        }
+        
     }
 
     public void OnButtonAttack1()
@@ -123,12 +161,10 @@ public class BattleUIManager : MonoBehaviour
         if (healthBar != null)
         {
             healthBar.value = unit.GetHealthValue();
-            healthBar.interactable = false;
         }
         if(skillBar != null)
         {
             skillBar.value = unit.GetSkillValue();
-            skillBar.interactable = false;
         }
 
         //name
@@ -141,8 +177,38 @@ public class BattleUIManager : MonoBehaviour
         //Skill Button name
     }
 
-    public void UpdateEnemyInfo()
+    public void UpdateEnemyInfo(BattleEnemy enemy)
     {
+        if(enemy == null)
+        {
+            Debug.Log("null enemy.");
+            return;
+        }
+        //avatar
+        Transform enemyAvatarCamera = GameObject.Find("EnemyCamera").transform;
+        enemyAvatarCamera.position = new Vector3(enemy.GetPosition(), enemy.transform.position.y, enemyAvatarCamera.position.z);
+        enemyAvatarCamera.SetParent(enemy.transform);
+
+        //name
+        Text enemyName = GameObject.Find("EnemyName").GetComponent<Text>();
+        enemyName.text = enemy.name;
+
+        
+        
+
+        //health bar and skill bat
+        Slider healthBar = GameObject.Find("EnemyHealthBar").GetComponent <Slider>();
+        Slider skillBar = GameObject.Find("EnemySkillBar").GetComponent<Slider>();
+        if (healthBar != null)
+        {
+            healthBar.value = enemy.GetHealthValue();
+            healthBar.interactable = false;
+        }
+        if (skillBar != null)
+        {
+            skillBar.value = enemy.GetSkillValue();
+            skillBar.interactable = false;
+        }
 
     }
 }

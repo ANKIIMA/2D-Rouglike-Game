@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3046701072714125684}
   - component: {fileID: 3046701072714125687}
   - component: {fileID: 9122549830690842413}
+  - component: {fileID: 4792911052863719416}
   m_Layer: 0
   m_Name: FlyingEye
   m_TagString: Untagged
@@ -116,3 +117,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 874ea20547a988243861de06db389247, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!61 &4792911052863719416
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3046701072714125686}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.14137793, y: 0.0538584}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 6, y: 6}
+    newSize: {x: 1.5, y: 1.5}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2.2703028, y: 2.7146351}
+  m_EdgeRadius: 0

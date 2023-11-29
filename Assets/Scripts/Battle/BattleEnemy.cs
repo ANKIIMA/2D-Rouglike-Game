@@ -8,12 +8,21 @@ public class BattleEnemy : MonoBehaviour
     private Animator m_Animator;
     //bool check if unit action is over.
     private bool m_actionDone = false;
+    private int m_hp;
+    private int m_maxhp;
+    private int m_sp;
+    private int m_maxsp;
     protected virtual void Awake()
     {
         //Register to the battle manager.
         BattleManager.instance.AddEnemy(this);
 
         m_actionDone = false;
+
+        m_maxhp = 100;
+        m_hp = m_maxhp;
+        m_maxsp = 100;
+        m_sp = m_maxsp;
     }
 
     /// <summary>
@@ -90,5 +99,15 @@ public class BattleEnemy : MonoBehaviour
     public virtual void ResetActionDone()
     {
         m_actionDone = false;
+    }
+
+    public float GetHealthValue()
+    {
+        return (float)m_hp / m_maxhp;
+    }
+
+    public float GetSkillValue()
+    {
+        return (float)m_sp / m_maxsp;
     }
 }
