@@ -44,13 +44,13 @@ public class GameManager : MonoBehaviour
     //Boolean to check if we're setting up board, prevent Player from moving during setup.
     private bool doingSetup = true;
 
-    //Boolean to check if the player is in turn-based fighting.
-    private bool isFighting = false;
-
     //Hero team list
     public List<BattleManager.heroTypes> heroList;
     //Enemy team list
     public List<BattleManager.enemyTypes>  enemyList;
+
+    //the enemy which is fighting with the player.
+    public Enemy currentEnemy;
 
     private void Awake()
     {
@@ -160,6 +160,11 @@ public class GameManager : MonoBehaviour
 
         //Start moving enemies.
         StartCoroutine(MoveEnemies());
+
+        if(enemies.Count == 0)
+        {
+            StopCoroutine(MoveEnemies() );
+        }
     }
 
     //Coroutine to move enemies in sequence.
@@ -204,7 +209,7 @@ public class GameManager : MonoBehaviour
 
         //Enable black background image gameObject.
         levelImage.SetActive(true);
-
+        
         //Disable this GameManager.
         enabled = false;
 
@@ -228,17 +233,16 @@ public class GameManager : MonoBehaviour
         enemies.Add(script);
     }
 
-    public void EnterBattler()
+    public void EnterBattle(Enemy enemy)
     {
-        if(BattleManager.instance != null)
-        {
-            BattleManager.instance.gameObject.SetActive(true);
-        }
-        else
-        {
-            Debug.Log("Null reference : " + BattleManager.instance.gameObject.name);
-        }
+        currentEnemy = enemy;
+        BattleManager.instance.gameObject.SetActive(true);
     }
 
-
+    public void ExitBattle()
+    {
+        BattleManager.instance.gameObject.SetActive(false);
+        enemies.Remove(currentEnemy);
+        Destroy(currentEnemy.gameObject);
+    }
 }

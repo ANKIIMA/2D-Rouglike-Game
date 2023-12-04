@@ -12,10 +12,11 @@ public class BattleEnemy : MonoBehaviour
     private int m_maxhp;
     private int m_sp;
     private int m_maxsp;
+    private int m_attackValue;
     protected virtual void Awake()
     {
         //Register to the battle manager.
-        BattleManager.instance.AddEnemy(this);
+        BattleManager.instance.RegisterEnemy(this);
 
         m_actionDone = false;
 
@@ -23,6 +24,9 @@ public class BattleEnemy : MonoBehaviour
         m_hp = m_maxhp;
         m_maxsp = 100;
         m_sp = m_maxsp;
+        m_attackValue = 10;
+
+        m_Animator = GetComponent<Animator>();
     }
 
     /// <summary>
@@ -30,9 +34,13 @@ public class BattleEnemy : MonoBehaviour
     /// </summary>
     /// <typeparam name="T">Enemy script type</typeparam>
     /// <param name="Attacker">Attacker</param>
-    protected virtual void TakeDamage<T>(T Attacker) where T : BattleHero
+    public virtual void TakeDamage<T>(T Attacker) where T : BattleHero
     {
-
+        //hp
+        m_hp -= Attacker.GetAttackValue();
+        //UI
+        BattleUIManager.instance.UpdateEnemyBar(this);
+        OnEnemyDeath();
     }
 
     /// <summary>
@@ -91,6 +99,19 @@ public class BattleEnemy : MonoBehaviour
         yield break;
     }
 
+    private void OnEnemyDeath()
+    {
+        //Enemy died
+        if(m_hp <= 0)
+        {
+            m_Animator.CrossFade("Death", 0f);
+            BattleManager.instance.DeleteObjectInBattleQueue(this);
+            BattleUIManager.instance.ResetChosenEnemy();
+            GetComponent<BoxCollider2D>().enabled = false;
+
+        }
+    }
+
     public void StartTimer()
     {
         StartCoroutine (Timer());
@@ -109,5 +130,10 @@ public class BattleEnemy : MonoBehaviour
     public float GetSkillValue()
     {
         return (float)m_sp / m_maxsp;
+    }
+
+    public int GetAttackValue()
+    {
+        return m_attackValue;
     }
 }

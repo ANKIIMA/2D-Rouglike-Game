@@ -15,20 +15,27 @@ public class BattleHero : MonoBehaviour
     private int m_sp;
     private int m_maxsp;
 
+    private int m_attackValue;
+
     private bool m_actionDone = false;
+
+    private bool m_ReachEnemy = false;
 
     protected virtual void Awake()
     {
         //Register to the battle manager
-        BattleManager.instance.AddTeamMembers(this);
+        BattleManager.instance.RegisterHero(this);
         m_Animator = GetComponent<Animator>();
         //initiate hp and sp
         m_maxhp = 100;
         m_hp = m_maxhp;
         m_maxsp = 100;
         m_sp = m_maxsp;
+
+        m_attackValue = 50;
         //reset actionDone
         m_actionDone = false;
+        m_ReachEnemy = false;
     }
 
     /// <summary>
@@ -38,17 +45,8 @@ public class BattleHero : MonoBehaviour
     /// <param name="Attacker">Attacker</param>
     protected virtual void TakeDamage<T>(T Attacker) where T : BattleEnemy
     {
-
-    }
-
-    /// <summary>
-    /// Attack the attacked.
-    /// </summary>
-    /// <typeparam name="T">Enemy script type</typeparam>
-    /// <param name="theAttacked">the Attacked one</param>
-    protected virtual void Attack<T>(T theAttacked) where T : BattleEnemy
-    {
-
+        m_hp -= Attacker.GetAttackValue();
+        OnHeroDeath();
     }
 
     /// <summary>
@@ -80,13 +78,16 @@ public class BattleHero : MonoBehaviour
         return false;
     }
 
-    protected virtual bool Attack1()
+    protected virtual bool Attack1(BattleEnemy target)
     {
 
-
+        if(m_ReachEnemy == false)
+        {
+            m_ReachEnemy = true;
+            target.TakeDamage(this);
+        }
         //已经移动到敌人了
         //m_Animator.CrossFade("Attack1", 0.1f);
-
         //2s后返回true.
 
         return m_actionDone;
@@ -106,7 +107,17 @@ public class BattleHero : MonoBehaviour
         StartCoroutine(Timer());
     }
 
-    protected virtual bool Attack2()
+    private void OnHeroDeath()
+    {
+        //Enemy died
+        if (m_hp <= 0)
+        {
+            m_Animator.CrossFade("Death", 0f);
+            BattleManager.instance.DeleteObjectInBattleQueue(this);
+        }
+    }
+
+    protected virtual bool Attack2(BattleEnemy target)
     {
         return false;
     }
@@ -131,18 +142,18 @@ public class BattleHero : MonoBehaviour
     {
         switch (index)
         {
-            case 0: return Attack1();
-            case 1: return Attack2();
+            case 0: return Attack1(target);
+            case 1: return Attack2(target);
             case 2: return Skill1();
             case 3: return Skill2();
             default: return false;
         }
     }
 
-    public virtual void ResetActionDone()
+    public virtual void ResetBool()
     {
         m_actionDone = false;
-
+        m_ReachEnemy = false;
     }
 
     public float GetHealthValue()
@@ -153,5 +164,10 @@ public class BattleHero : MonoBehaviour
     public float GetSkillValue()
     {
         return (float)m_sp / m_maxsp;
+    }
+
+    public int GetAttackValue()
+    {
+        return m_attackValue;
     }
 }

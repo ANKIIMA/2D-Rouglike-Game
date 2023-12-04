@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.Accessibility;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static UnityEngine.EventSystems.EventTrigger;
+using static UnityEngine.UI.CanvasScaler;
 using Slider = UnityEngine.UI.Slider;
 
 
@@ -76,23 +78,17 @@ public class BattleUIManager : MonoBehaviour
 
     public void OnButtonAttack1()
     {
-        //Debug.Log("Attack1");
         actionIndex = 0;
-        Debug.Log("current index" +  actionIndex);
     }
 
     public void OnButtonAttack2()
     {
-        //Debug.Log("Attack2");
         actionIndex = 1;
-        Debug.Log("current index" + actionIndex);
     }
 
     public void OnButtonSkill1()
     {
-        //Debug.Log("Pass");
         actionIndex = 2;
-        Debug.Log("current index" + actionIndex);
     }
     /// <summary>
     /// set the target enemy;
@@ -117,7 +113,7 @@ public class BattleUIManager : MonoBehaviour
             //set the config of player.
             BattleStateManager.instance.heroAttackState.SetCode(actionIndex);
             BattleStateManager.instance.heroAttackState.SetTarget(enemyTarget);
-           BattleStateManager.instance.OnChangeState(BattleStateManager.instance.heroAttackState);
+            BattleStateManager.instance.OnChangeState(BattleStateManager.instance.heroAttackState);
 
         }
     }
@@ -154,19 +150,8 @@ public class BattleUIManager : MonoBehaviour
         Transform avatarCamera = GameObject.Find("HeroCamera").transform;
         avatarCamera.position = new Vector3(x + 0.24f, avatarCamera.position.y, avatarCamera.position.z);
         avatarCamera.SetParent(unit.transform);
-
-        //health bar and skill bar
-        Slider healthBar = GameObject.Find("HealthBar").GetComponent<Slider>();
-        Slider skillBar = GameObject.Find("SkillBar").GetComponent<Slider>();
-        if (healthBar != null)
-        {
-            healthBar.value = unit.GetHealthValue();
-        }
-        if(skillBar != null)
-        {
-            skillBar.value = unit.GetSkillValue();
-        }
-
+        //Bar
+        UpdateHeroBar(unit);
         //name
         Text heroName = GameObject.Find("UnitName").GetComponent<Text>();
         if(heroName != null)
@@ -175,6 +160,24 @@ public class BattleUIManager : MonoBehaviour
         }
 
         //Skill Button name
+    }
+
+    /// <summary>
+    /// //health bar and skill bar
+    /// </summary>
+    /// <param name="unit"></param>
+    public void UpdateHeroBar(BattleHero unit)
+    {
+        Slider healthBar = GameObject.Find("HealthBar").GetComponent<Slider>();
+        Slider skillBar = GameObject.Find("SkillBar").GetComponent<Slider>();
+        if (healthBar != null)
+        {
+            healthBar.value = unit.GetHealthValue();
+        }
+        if (skillBar != null)
+        {
+            skillBar.value = unit.GetSkillValue();
+        }
     }
 
     public void UpdateEnemyInfo(BattleEnemy enemy)
@@ -193,11 +196,19 @@ public class BattleUIManager : MonoBehaviour
         Text enemyName = GameObject.Find("EnemyName").GetComponent<Text>();
         enemyName.text = enemy.name;
 
-        
-        
 
         //health bar and skill bat
-        Slider healthBar = GameObject.Find("EnemyHealthBar").GetComponent <Slider>();
+        UpdateEnemyBar(enemy);
+
+    }
+
+    /// <summary>
+    /// //health bar and skill bat
+    /// </summary>
+    /// <param name="enemy"></param>
+    public void UpdateEnemyBar(BattleEnemy enemy)
+    {
+        Slider healthBar = GameObject.Find("EnemyHealthBar").GetComponent<Slider>();
         Slider skillBar = GameObject.Find("EnemySkillBar").GetComponent<Slider>();
         if (healthBar != null)
         {
@@ -209,6 +220,10 @@ public class BattleUIManager : MonoBehaviour
             skillBar.value = enemy.GetSkillValue();
             skillBar.interactable = false;
         }
-
+    }
+    public void ResetChosenEnemy()
+    {
+        enemyTarget = null;
+        DeactivateEnemyInfo();
     }
 }

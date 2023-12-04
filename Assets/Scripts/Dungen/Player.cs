@@ -241,7 +241,8 @@ public class Player : MovingObject
         }
         else if(other.tag == "Enemy")
         {
-            GameManager.instance.EnterBattler();
+            GameManager.instance.EnterBattle(other.gameObject.GetComponent<Enemy>());
+            
         }
     }
 

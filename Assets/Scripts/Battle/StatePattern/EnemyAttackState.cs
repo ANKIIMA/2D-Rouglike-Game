@@ -22,6 +22,7 @@ public class EnemyAttackState : BattleState
 
     public void OnStateEnter()
     {
+        if(BattleManager.instance.GetEnemyCount() == 0) { return; }
         Debug.LogError("Enter Enemy Attack.");
         allActionDone = false;
         actionCount = 0;

@@ -18,6 +18,10 @@ public class WaitForInputState : BattleState
         BattleUIManager.instance.ActivatePlayerActionPanel();
 
         currentUnit = BattleManager.instance.GetActionHero();
+        if(currentUnit == null)
+        {
+            return;
+        }
         //change the avatar position to the unit.   
         BattleUIManager.instance.UpdateHeroInfo(currentUnit.GetPosition(), currentUnit);
     }
