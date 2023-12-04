@@ -214,10 +214,13 @@ public class GameManager : MonoBehaviour
         enabled = false;
 
         //Call the HideLevelImage function with a delay in seconds of levelStartDelay.
-        Invoke("CloseGame", 2.0f);
+        Invoke("BackToHall", 2.0f);
     }
 
-    public void CloseGame()
+    /// <summary>
+    /// return to the start hall
+    /// </summary>
+    public void BackToHall()
     {
         /*将状态设置false才能退出游戏*/
 #if UNITY_EDITOR
@@ -232,13 +235,18 @@ public class GameManager : MonoBehaviour
         //Add Enemy to List enemies.
         enemies.Add(script);
     }
-
+    /// <summary>
+    /// enter battle in dungen
+    /// </summary>
+    /// <param name="enemy">the enemy which is fighting with</param>
     public void EnterBattle(Enemy enemy)
     {
         currentEnemy = enemy;
         BattleManager.instance.gameObject.SetActive(true);
     }
-
+    /// <summary>
+    /// exti battle in dungen
+    /// </summary>
     public void ExitBattle()
     {
         BattleManager.instance.gameObject.SetActive(false);

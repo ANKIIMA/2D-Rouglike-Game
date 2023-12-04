@@ -22,7 +22,6 @@ public class BattleManager : MonoBehaviour
 
     //point set
     private float unitLength;
-
     private Vector3 heroPos;
     private Vector3 enemyPos;
 
@@ -87,7 +86,6 @@ public class BattleManager : MonoBehaviour
 
         //Dont destroy when change scenes.
         DontDestroyOnLoad(gameObject);
-        instance.SetPoints();
         instance.AddDictionary();
 
         SceneManager.sceneLoaded += OnSceneWasLoaded;
@@ -134,7 +132,7 @@ public class BattleManager : MonoBehaviour
             float topPoint = rightTop.y;
 
             //Divide the whole platform into 8 units.
-            float unitLength = (rightPoint - leftPoint) / 9;
+            unitLength = (rightPoint - leftPoint) / 9;
             float heroPosX = unitLength + leftPoint;
             float enemyPosX = rightPoint - unitLength;
             float posY = (topPoint - bottomPoint) * 2 / 5;
@@ -174,7 +172,6 @@ public class BattleManager : MonoBehaviour
         {
             Instantiate(enemiesConfig[Type], enemyPos, Quaternion.identity, enemyHandler.transform);
             enemyPos.x -= unitLength;
-
         }
         enemyHandler.transform.SetParent(BattleHandlerTrans);
 
@@ -183,7 +180,6 @@ public class BattleManager : MonoBehaviour
         {
             Instantiate(herosConfig[Type], heroPos, Quaternion.identity, heroHandler.transform);  
             heroPos.x += unitLength;
-            
         }
         heroHandler.transform.SetParent (BattleHandlerTrans);
 
@@ -245,6 +241,8 @@ public class BattleManager : MonoBehaviour
 
         enemyScriptQueue.Clear();
         heroScriptQueue.Clear();
+
+        instance.SetPoints();
 
         BattleHandlerTrans.gameObject.SetActive(false);
         instance.gameObject.SetActive(false);
