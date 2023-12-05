@@ -159,13 +159,24 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    private void GnerateHeros()
+    {
+        GameObject heroHandler = new GameObject("HeroTeam");
+        //Hero team will be placed from front to back. 
+        foreach (var Type in GameManager.instance.heroList)
+        {
+            Instantiate(herosConfig[Type], heroPos, Quaternion.identity, heroHandler.transform);
+            heroPos.x += unitLength;
+        }
+        heroHandler.transform.SetParent(BattleHandlerTrans);
+    }
+
     /// <summary>
     /// Generate the heros and enemies, enable the platfrom.
     /// </summary>
-    private void GenerateUnits()
+    public void GenerateEnemies()
     {
         GameObject enemyHandler = new GameObject("EnemyTeam");
-        GameObject heroHandler = new GameObject("HeroTeam");
         //Enemy will be placed from back to front.
         //Generate enemies
         foreach (var Type in GameManager.instance.enemyList)
@@ -174,15 +185,6 @@ public class BattleManager : MonoBehaviour
             enemyPos.x -= unitLength;
         }
         enemyHandler.transform.SetParent(BattleHandlerTrans);
-
-        //Hero team will be placed from front to back. 
-        foreach(var Type in GameManager.instance.heroList)
-        {
-            Instantiate(herosConfig[Type], heroPos, Quaternion.identity, heroHandler.transform);  
-            heroPos.x += unitLength;
-        }
-        heroHandler.transform.SetParent (BattleHandlerTrans);
-
     }
 
     /// <summary>
@@ -192,13 +194,7 @@ public class BattleManager : MonoBehaviour
     public void RegisterHero(BattleHero member)
     {
         //There are up to 3 members in the team.
-        if(heroScriptQueue.Count > 3) 
-        {
-            Debug.Log("Reach the max team members.");
-            return; 
-        }
-        else 
-            heroScriptQueue.Enqueue(member);
+        heroScriptQueue.Enqueue(member);
     }
 
     /// <summary>
@@ -208,12 +204,7 @@ public class BattleManager : MonoBehaviour
     public void RegisterEnemy(BattleEnemy enemy)
     {
         //There are up to 4 members in the enemy list.
-        if(enemyScriptQueue.Count > 4)
-        {
-            Debug.Log("Reach the max enemy number.");
-        }
-        else
-            enemyScriptQueue.Enqueue(enemy);
+        enemyScriptQueue.Enqueue(enemy);
     }
 
     /// <summary>
@@ -224,7 +215,7 @@ public class BattleManager : MonoBehaviour
     void OnSceneWasLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
         ReloadBattleManager();
-        instance.GenerateUnits();
+        instance.GnerateHeros();
     }
 
     /// <summary>
@@ -337,5 +328,24 @@ public class BattleManager : MonoBehaviour
             tmp = null;
         }
 
+    }
+
+    public void ClearEnemyQueue()
+    {
+        enemyScriptQueue.Clear();
+        SetPoints();
+    }
+
+    /// <summary>
+    /// return a random type in enemy types.
+    /// </summary>
+    /// <returns>random enemy type</returns>
+    public enemyTypes RandomEnemyType()
+    {
+        //convert to array.
+        Array enumValues = Enum.GetValues(typeof(enemyTypes));
+        //get a random arrat member.
+        enemyTypes randomEnum = (enemyTypes)enumValues.GetValue(UnityEngine.Random.Range(0, enumValues.Length));
+        return randomEnum;
     }
 }

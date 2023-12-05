@@ -107,8 +107,9 @@ public class BattleEnemy : MonoBehaviour
             m_Animator.CrossFade("Death", 0f);
             BattleManager.instance.DeleteObjectInBattleQueue(this);
             BattleUIManager.instance.ResetChosenEnemy();
+            BattleUIManager.instance.ResetEnemyCamera();
             GetComponent<BoxCollider2D>().enabled = false;
-
+            
         }
     }
 

@@ -159,7 +159,7 @@ public class BattleUIManager : MonoBehaviour
             heroName.text = unit.name;
         }
 
-        //Skill Button name
+        //TODO: Skill Button name
     }
 
     /// <summary>
@@ -225,5 +225,17 @@ public class BattleUIManager : MonoBehaviour
     {
         enemyTarget = null;
         DeactivateEnemyInfo();
+    }
+
+    public void ResetEnemyCamera()
+    {
+        Transform enemyAvatarCamera = GameObject.Find("EnemyCamera").transform;
+        enemyAvatarCamera.SetParent(GameObject.Find("UIManager").transform);
+    }
+
+    public void ResetHeroCamera()
+    {
+        Transform avatarCamera = GameObject.Find("HeroCamera").transform;
+        avatarCamera.SetParent(GameObject.Find("UIManager").transform);
     }
 }

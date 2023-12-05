@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
     //Store a reference to our BoardManager which will set up the level.
     private BoardManager boardScript;
     //Current level number, expressed in game as "Day  1".
-    private int level = 2;
+    private int level = 4;
 
     //List of all Enemy units, used to issue them move commands.
     private List<Enemy> enemies;
@@ -75,7 +75,8 @@ public class GameManager : MonoBehaviour
         //Get a component reference to the attached BoardManager script
         boardScript = GetComponent<BoardManager>();
 
-
+        //temp code to add units.
+        InitiateHeroTeam();
         //Call the InitGame function to initialize the first level 
         InitGame();
     }
@@ -131,12 +132,19 @@ public class GameManager : MonoBehaviour
         //Call the SetupScene function of the BoardManager script, pass it current level number.
         boardScript.SetupScene(level);
 
-        //temp code to add units.
-        instance.enemyList.Add(enemyTypes.FlyingEye);
-        instance.enemyList.Add(enemyTypes.Goblin);
+    }
+
+    /// <summary>
+    /// initiate the hero team.
+    /// </summary>
+    private void InitiateHeroTeam()
+    {
+        heroList.Clear();
+        enemyList.Clear();
 
         instance.heroList.Add(heroTypes.knight);
 
+        //TODO: add hero or delete hero in the hall
     }
 
     //Hides black image used between levels
@@ -242,15 +250,55 @@ public class GameManager : MonoBehaviour
     public void EnterBattle(Enemy enemy)
     {
         currentEnemy = enemy;
+        RandomEnemyTeam();
+        Debug.Log("Eneter battle.");
         BattleManager.instance.gameObject.SetActive(true);
+        BattleManager.instance.GenerateEnemies();
     }
     /// <summary>
     /// exti battle in dungen
     /// </summary>
     public void ExitBattle()
     {
+        Destroy(GameObject.Find("EnemyTeam").gameObject);
         BattleManager.instance.gameObject.SetActive(false);
         enemies.Remove(currentEnemy);
         Destroy(currentEnemy.gameObject);
+    }
+    private void RandomEnemyTeam()
+    {
+        //clear enemy team
+        BattleManager.instance.ClearEnemyQueue();
+        enemyList.Clear();
+        
+
+        //random add enemy to enemy list.
+        // there are up to 4 enemies and at least 1 enemy.
+        float count = UnityEngine.Random.value;
+        while(enemyList.Count == 0 || (count > 0.7f && enemyList.Count <= 4))
+        {
+            enemyList.Add(BattleManager.instance.RandomEnemyType());
+            count = UnityEngine.Random.value;
+        }
+    }
+
+    /// <summary>
+    /// Add hero to the hero list.
+    /// </summary>
+    /// <param name="hero"></param>
+    /// <returns></returns>
+    public bool AddHero(heroTypes hero)
+    {
+        //there are up to 3 heros and at least 1 hero.
+        if(heroList.Count > 3) 
+        {
+            Debug.Log("3 heros.");
+            return false;
+        }
+        else
+        {
+            heroList.Add(hero);
+            return true;
+        }
     }
 }
