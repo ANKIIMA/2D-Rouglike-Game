@@ -5,28 +5,35 @@ using UnityEngine;
 //Control the action of enemies in the battle
 public class BattleEnemy : MonoBehaviour
 {
-    private Animator m_Animator;
+    protected Animator m_Animator;
     //bool check if unit action is over.
-    private bool m_actionDone = false;
-    private int m_hp;
-    private int m_maxhp;
-    private int m_sp;
-    private int m_maxsp;
-    private int m_attackValue;
+    protected bool m_actionDone = false;
+    protected int m_hp;
+    protected int m_maxhp;
+    protected int m_sp;
+    protected int m_maxsp;
+    protected int m_attackValue;
+    protected float m_OriginPos;
+    protected bool m_MoveToTargetDone;
+    protected bool m_AttackStart;
+    protected bool m_AttackEnd;
+    protected SpriteRenderer m_SpriteRenderer;
+    protected float m_MoveSpeed = 6.0f;
+
     protected virtual void Awake()
     {
         //Register to the battle manager.
         BattleManager.instance.RegisterEnemy(this);
 
-        m_actionDone = false;
-
-        m_maxhp = 100;
-        m_hp = m_maxhp;
-        m_maxsp = 100;
-        m_sp = m_maxsp;
-        m_attackValue = 10;
+        ResetBool();
 
         m_Animator = GetComponent<Animator>();
+        m_SpriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    private void Start()
+    {
+        m_OriginPos = GetPosition();
     }
 
     /// <summary>
@@ -36,21 +43,13 @@ public class BattleEnemy : MonoBehaviour
     /// <param name="Attacker">Attacker</param>
     public virtual void TakeDamage<T>(T Attacker) where T : BattleHero
     {
+        //Animation
+        m_Animator.CrossFade("TakeDamage", 0f);
         //hp
         m_hp -= Attacker.GetAttackValue();
         //UI
         BattleUIManager.instance.UpdateEnemyBar(this);
         OnEnemyDeath();
-    }
-
-    /// <summary>
-    /// Attack the attacked.
-    /// </summary>
-    /// <typeparam name="T">Enemy script type</typeparam>
-    /// <param name="theAttacked">the Attacked one</param>
-    protected virtual void Attack<T>(T theAttacked) where T : BattleHero
-    {
-
     }
 
     /// <summary>
@@ -72,20 +71,100 @@ public class BattleEnemy : MonoBehaviour
     {
         float destination = target.GetPosition();
         //已经移动到指定位置
-        if (Mathf.Abs(GetPosition() - destination) < 0.2f)
+        if (Mathf.Abs(GetPosition() - destination) < 0.1f)
         {
-            Debug.Log("Reach the destination.");
             return true;
         }
-        //向左移动的距离
-        transform.Translate(new Vector3(-destination * Time.deltaTime, 0, 0));
+        //移动
+        //当前位置在目标位置右边，向左移动
+        if ((destination - GetPosition() <= 0))
+        {
+            m_SpriteRenderer.flipX = true;
+            transform.Translate(Vector3.left * Time.deltaTime * m_MoveSpeed);
+        }
+        else
+        {
+            m_SpriteRenderer.flipX=false;
+            transform.Translate(Vector3.right * Time.deltaTime * m_MoveSpeed);
+        }
+        return false;
+    }
+
+    public virtual bool Move(float destination) 
+    {
+        //已经移动到指定位置
+        if (Mathf.Abs(GetPosition() - destination) < 0.1f)
+        {
+            return true;
+        }
+        //移动
+        //当前位置在目标位置右边，向左移动
+        if ((destination - GetPosition() <= 0))
+        {
+            m_SpriteRenderer.flipX = true;
+            transform.Translate(Vector3.left * Time.deltaTime * m_MoveSpeed);
+        }
+        else
+        {
+            m_SpriteRenderer.flipX = false;
+            transform.Translate(Vector3.right * Time.deltaTime * m_MoveSpeed);
+        }
         return false;
     }
 
     public virtual bool Attack()
     {
-        //移动，攻击，返回移动
+        //随机获取一个目标
+        BattleHero target = BattleManager.instance.RandomAliveHero();
 
+        //还未移动到指定位置
+        if (m_MoveToTargetDone == false)
+        {
+            if (m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Run") == false)
+            {
+                m_Animator.CrossFade("Run", 0f);
+            }
+            if (Move(target) == true)
+            {
+                m_MoveToTargetDone = true;
+            }
+        }
+        //移动到了但是没开始攻击
+        else if (m_MoveToTargetDone == true && m_AttackStart == false)
+        {
+            m_AttackStart = true;
+            if (m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Attack1") == false)
+            {
+                m_Animator.CrossFade("Attack1", 0f);
+            }
+            target.TakeDamage(this);
+        }
+        //攻击开始了但没结束
+        else if (m_AttackStart == true && m_AttackEnd == false)
+        {
+            if (m_Animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.9f)
+            {
+                m_AttackEnd = true;
+            }
+        }
+        //攻击结束了
+        else if (m_AttackEnd == true)
+        {
+            if (m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Run") == false)
+            {
+                m_Animator.CrossFade("Run", 0f);
+            }
+            m_actionDone = Move(m_OriginPos);
+        }
+        //回到了原点
+        if (m_actionDone == true)
+        {
+            if(m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle") == false)
+            {
+                m_Animator.CrossFade("Idle", 0f);
+            }
+            m_SpriteRenderer.flipX = true;
+        }
         return m_actionDone;
     }
 
@@ -118,9 +197,12 @@ public class BattleEnemy : MonoBehaviour
         StartCoroutine (Timer());
     }
 
-    public virtual void ResetActionDone()
+    public virtual void ResetBool()
     {
         m_actionDone = false;
+        m_AttackEnd = false;
+        m_AttackStart = false;
+        m_MoveToTargetDone = false;
     }
 
     public float GetHealthValue()

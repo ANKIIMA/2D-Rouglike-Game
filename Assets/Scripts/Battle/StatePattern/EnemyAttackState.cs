@@ -36,8 +36,6 @@ public class EnemyAttackState : BattleState
 
         //clear the unitIndex for hero
         BattleManager.instance.ClearUnitIndex();
-
-        currentUnit.StartTimer();
     }
 
     public void OnStateLeave()
@@ -56,7 +54,7 @@ public class EnemyAttackState : BattleState
         //action is over
         else
         {
-            currentUnit.ResetActionDone();
+            currentUnit.ResetBool();
             //all unit have attacked
             if(actionCount == BattleManager.instance.GetEnemyCount())
             {
@@ -67,8 +65,6 @@ public class EnemyAttackState : BattleState
             {
                 currentUnit = BattleManager.instance.GetActionEnemy();
                 actionCount++;
-                
-                currentUnit.StartTimer();
             }
         }
     }

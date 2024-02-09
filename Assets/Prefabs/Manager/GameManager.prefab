@@ -93,3 +93,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09ae38c2fde81e14b93f63e221f5636c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelStartDelay: 2
+  turnDelay: 0.1
+  playerFoodPoints: 100
+  playersTurn: 1
+  heroDatas: []
+  level: 0
+  enemiesMoving: 0
+  heroList: 
+  enemyList: 
+  currentEnemy: {fileID: 0}

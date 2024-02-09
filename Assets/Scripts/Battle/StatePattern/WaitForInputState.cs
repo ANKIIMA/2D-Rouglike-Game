@@ -13,7 +13,6 @@ public class WaitForInputState : BattleState
 
     public void OnStateEnter()
     {
-        Debug.LogError("Start to Wait For Input.");
         //activate the button
         BattleUIManager.instance.ActivatePlayerActionPanel();
 

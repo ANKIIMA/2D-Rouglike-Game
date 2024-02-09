@@ -69,7 +69,8 @@ public class Player : MovingObject
 
     private void OnDestroy()
     {
-        GameManager.instance.playerFoodPoints = food;
+        GameManager.instance.playerFoodPoints = 100;   
+        
     }
 
     // Update is called once per frame
@@ -250,7 +251,7 @@ public class Player : MovingObject
     private void Restart()
     {
         //Load the last scene loaded, in this case Main, the only scene in the game.
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("Dungen");
     }
 
     //LoseFood is called when an enemy attacks the player.

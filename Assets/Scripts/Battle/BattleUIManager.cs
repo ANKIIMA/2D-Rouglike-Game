@@ -146,6 +146,9 @@ public class BattleUIManager : MonoBehaviour
     /// <param name="unit">script of hero</param>
     public void UpdateHeroInfo(float x, BattleHero unit)
     {
+        //load data
+        HeroBaseSO data = (HeroBaseSO)Resources.Load("SOAssets/" + unit.m_type + "Data");
+        
         //camera and avatar
         Transform avatarCamera = GameObject.Find("HeroCamera").transform;
         avatarCamera.position = new Vector3(x + 0.24f, avatarCamera.position.y, avatarCamera.position.z);
@@ -156,10 +159,24 @@ public class BattleUIManager : MonoBehaviour
         Text heroName = GameObject.Find("UnitName").GetComponent<Text>();
         if(heroName != null)
         {
-            heroName.text = unit.name;
+            heroName.text = data.m_UnitName;
         }
 
-        //TODO: Skill Button name
+        //Skill Button name
+        Transform SkillPanel = heroName.transform.parent.Find("Skill");
+        for(int i = 0; i < SkillPanel.childCount; i++)
+        {
+            Transform child = SkillPanel.GetChild(i);
+            if(child != null)
+            {
+                child.Find("Text").GetComponent<Text>().text = data.m_SkillList[i].m_SkillName; 
+            }
+        }
+
+        //skill info
+        Transform InfoPanel = heroName.transform.parent.Find("Info");
+        InfoPanel.Find("text").GetComponent<Text>().text = data.m_SkillList[actionIndex].m_skillDescription;
+
     }
 
     /// <summary>

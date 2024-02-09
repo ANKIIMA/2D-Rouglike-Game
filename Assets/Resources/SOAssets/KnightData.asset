@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e1a224fa1cd479459840021773b434c, type: 3}
+  m_Name: KnightData
+  m_EditorClassIdentifier: 
+  m_UnitName: Grace
+  m_type: Knight
+  m_levelhp: 10
+  m_maxhp: 100
+  m_levelsp: 5
+  m_maxsp: 50
+  m_levelAttack: 5
+  m_attackValue: 50
+  m_prefab: {fileID: 559936201764955935, guid: 5e234d9dc0286cf4884398337ac05c45, type: 3}
+  avatar: {fileID: 21300000, guid: 96ff9825df373464483e11019ee15052, type: 3}
+  m_SkillList:
+  - m_SkillName: Hit
+    m_skillDescription: Hit the enemy.
+    m_SkillDamage: 10
+    m_ActionSound: {fileID: 0}
+  - m_SkillName: tear
+    m_skillDescription: Tear the enemy.
+    m_SkillDamage: 20
+    m_ActionSound: {fileID: 0}
+  - m_SkillName: Heal
+    m_skillDescription: Heal himself.
+    m_SkillDamage: 10
+    m_ActionSound: {fileID: 0}
+  - m_SkillName: Shield
+    m_skillDescription: Defense the enemy.
+    m_SkillDamage: 0
+    m_ActionSound: {fileID: 0}

@@ -29,13 +29,15 @@ public class BattleManager : MonoBehaviour
     //Hero types.
     public enum heroTypes
     {
-        knight
+        knight,
+        MartialHero
     }
     //Enemy types.
     public enum enemyTypes
     {
         FlyingEye,
-        Goblin
+        Goblin,
+        DeathBringer
     }
 
     public Transform BattleHandlerTrans;
@@ -193,7 +195,6 @@ public class BattleManager : MonoBehaviour
     /// <param name="member">member script</param>
     public void RegisterHero(BattleHero member)
     {
-        //There are up to 3 members in the team.
         heroScriptQueue.Enqueue(member);
     }
 
@@ -347,5 +348,33 @@ public class BattleManager : MonoBehaviour
         //get a random arrat member.
         enemyTypes randomEnum = (enemyTypes)enumValues.GetValue(UnityEngine.Random.Range(0, enumValues.Length));
         return randomEnum;
+    }
+
+    /// <summary>
+    /// return a random type in hero types.
+    /// </summary>
+    /// <returns>random hero type</returns>
+    public static heroTypes RandomHeroType()
+    {
+        //convert to array.
+        Array enumValues = Enum.GetValues(typeof(heroTypes));
+        //get a random arrat member.
+        heroTypes randomEnum = (heroTypes)enumValues.GetValue(UnityEngine.Random.Range(0, enumValues.Length));
+        return randomEnum;
+    }
+
+    /// <summary>
+    /// return a random hero who is alive.
+    /// </summary>
+    /// <returns></returns>
+    public BattleHero RandomAliveHero()
+    {
+        if(heroScriptQueue.Count == 0)
+        {
+            return null;
+        }
+
+        BattleHero[] heroArray = heroScriptQueue.ToArray();
+        return heroArray[UnityEngine.Random.Range(0, heroScriptQueue.Count)];
     }
 }

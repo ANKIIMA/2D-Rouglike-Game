@@ -41,7 +41,7 @@ public class HeroAttackState : BattleState
         currentUnit = BattleStateManager.instance.waitForInputState.GetCurrentUnit();
         BattleUIManager.instance.DeactivatePlayerActionPanel();
         //start the timer to stimulate.
-        currentUnit.StartTimer();
+        //currentUnit.StartTimer();
 
     }
 

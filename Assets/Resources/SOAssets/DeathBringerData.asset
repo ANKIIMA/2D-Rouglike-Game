@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 749c55abdad536944aeeb8c52f3313a7, type: 3}
+  m_Name: DeathBringerData
+  m_EditorClassIdentifier: 
+  m_UnitName: Death
+  m_type: 
+  m_levelhp: 50
+  m_maxhp: 500
+  m_levelsp: 20
+  m_maxsp: 200
+  m_levelAttack: 5
+  m_attackValue: 30
+  m_prefab: {fileID: 0}
+  avatar: {fileID: 0}
+  m_Skills: []

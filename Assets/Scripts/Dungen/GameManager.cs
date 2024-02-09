@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using static BattleManager;
+using UnityEngine.SceneManagement;
+using static UIManager;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -26,6 +28,8 @@ public class GameManager : MonoBehaviour
     //[HideInInspector] public bool playersTurn = true;
     public bool playersTurn = true;
 
+    public List<HeroData> heroDatas;
+
 
     //Text to display current level number.
     private Text levelText;
@@ -35,7 +39,7 @@ public class GameManager : MonoBehaviour
     //Store a reference to our BoardManager which will set up the level.
     private BoardManager boardScript;
     //Current level number, expressed in game as "Day  1".
-    private int level = 4;
+    public int level = 0;
 
     //List of all Enemy units, used to issue them move commands.
     private List<Enemy> enemies;
@@ -79,6 +83,10 @@ public class GameManager : MonoBehaviour
         InitiateHeroTeam();
         //Call the InitGame function to initialize the first level 
         InitGame();
+
+        //Debug.logger.logEnabled = false;
+
+        SceneManager.sceneLoaded += LevelUpScene;
     }
 
     private void Start()
@@ -91,17 +99,21 @@ public class GameManager : MonoBehaviour
     }
 
     //This is called each time a scene is loaded.
-    void OnLevelWasLoaded(int index)
+    void LevelUpScene(Scene scene, LoadSceneMode mode)
     {
         //Add one to our level number.
-        level++;
-
-        if (BattleManager.instance != null)
+        if(scene.name == "Dungen")
         {
-            BattleManager.instance.gameObject.SetActive(false);
+            level++;
+            Debug.Log("levelupscene");
+            if (BattleManager.instance != null)
+            {
+                BattleManager.instance.gameObject.SetActive(false);
+            }
+            //Call InitGame to initialize our level.
+            InitGame();
         }
-        //Call InitGame to initialize our level.
-        InitGame();
+        
     }
 
 
@@ -142,9 +154,20 @@ public class GameManager : MonoBehaviour
         heroList.Clear();
         enemyList.Clear();
 
-        instance.heroList.Add(heroTypes.knight);
+        //读取英雄配置
+        ReadHeroConfig();
+    }
 
-        //TODO: add hero or delete hero in the hall
+    private void ReadHeroConfig()
+    {
+        //获取存在的类型和等级
+        heroDatas = UIManager.LoadHeroDataToFight();
+
+        foreach(HeroData heroData in heroDatas)
+        {
+            instance.heroList.Add(heroData.type);
+        }
+        
     }
 
     //Hides black image used between levels
@@ -231,10 +254,12 @@ public class GameManager : MonoBehaviour
     public void BackToHall()
     {
         /*将状态设置false才能退出游戏*/
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#endif
-        Application.Quit();
+        /*#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+        #endif
+                Application.Quit();*/
+
+        SceneManager.LoadScene("Hall");
     }
 
     //Call this to add the passed in Enemy to the List of Enemy objects.
@@ -264,6 +289,7 @@ public class GameManager : MonoBehaviour
         BattleManager.instance.gameObject.SetActive(false);
         enemies.Remove(currentEnemy);
         Destroy(currentEnemy.gameObject);
+        UIManager.Instance.AddCoins(10);
     }
     private void RandomEnemyTeam()
     {
@@ -279,26 +305,6 @@ public class GameManager : MonoBehaviour
         {
             enemyList.Add(BattleManager.instance.RandomEnemyType());
             count = UnityEngine.Random.value;
-        }
-    }
-
-    /// <summary>
-    /// Add hero to the hero list.
-    /// </summary>
-    /// <param name="hero"></param>
-    /// <returns></returns>
-    public bool AddHero(heroTypes hero)
-    {
-        //there are up to 3 heros and at least 1 hero.
-        if(heroList.Count > 3) 
-        {
-            Debug.Log("3 heros.");
-            return false;
-        }
-        else
-        {
-            heroList.Add(hero);
-            return true;
         }
     }
 }

@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 3046701072714125685}
   - component: {fileID: 3046701072714125684}
   - component: {fileID: 3046701072714125687}
-  - component: {fileID: 9122549830690842413}
   - component: {fileID: 4792911052863719416}
+  - component: {fileID: -3800978325514748254}
   m_Layer: 0
   m_Name: FlyingEye
   m_TagString: Untagged
@@ -105,18 +105,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
---- !u!114 &9122549830690842413
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3046701072714125686}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 874ea20547a988243861de06db389247, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!61 &4792911052863719416
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -143,3 +131,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.2703028, y: 2.7146351}
   m_EdgeRadius: 0
+--- !u!114 &-3800978325514748254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3046701072714125686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d3af2bd82ecc7f4cb2e88895ddadb07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -43,11 +43,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f6060d542a1e584aa962323b7e4ce76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitIndex: 0
+  BattleHandlerTrans: {fileID: 0}
+  DungenHandler: {fileID: 0}
   enemyConfigs:
   - type: 0
     prefab: {fileID: 3046701072714125686, guid: 86d67d34c3a11d94e9809eb93ea8be86, type: 3}
   - type: 1
     prefab: {fileID: 1979221260430481104, guid: e11ea0a637c8c2843b423053d8dc281b, type: 3}
+  - type: 2
+    prefab: {fileID: 5570127329693360203, guid: e3529e548707d544c8284933765633b4, type: 3}
   heroConfigs:
   - type: 0
     prefab: {fileID: 559936201764955935, guid: 5e234d9dc0286cf4884398337ac05c45, type: 3}
+  - type: 1
+    prefab: {fileID: 8195692833699334001, guid: 560e416abe5d1884baae3c83db367132, type: 3}
